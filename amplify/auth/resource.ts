@@ -15,6 +15,7 @@ export const auth = defineAuth({
 					clientSecret: secret("MICROSOFT_CLIENT_SECRET"),
 					issuerUrl:
 						"https://login.microsoftonline.com/4c70b964-f256-4054-ace6-6375714daa99",
+					scopes: ["openid", "profile", "email"],
 				},
 			],
 			logoutUrls: [
