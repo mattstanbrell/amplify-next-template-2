@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
 	getCurrentUser,
 	signInWithRedirect,
@@ -8,32 +8,29 @@ import {
 } from "aws-amplify/auth";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
-import "./../app/app.css";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
-import { messages } from "./translations";
-import { IntlProvider, FormattedMessage, useIntl } from "react-intl";
+import "./custom.scss";
 
 Amplify.configure(outputs);
 const client = generateClient<Schema>();
-function App() {
+
+export default function App() {
 	const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 	const [username, setUsername] = useState<string | null>(null);
-	const [locale, setLocale] = useState("en"); // Default to English
-	const intl = useIntl();
 
-	function listTodos() {
+	const listTodos = useCallback(() => {
 		client.models.Todo.observeQuery().subscribe({
 			next: (data) => setTodos([...data.items]),
 		});
-	}
+	}, []);
 
-	function deleteTodo(id: string) {
+	const deleteTodo = useCallback((id: string) => {
 		client.models.Todo.delete({ id });
-	}
+	}, []);
 
-	async function checkUserAuthentication() {
+	const checkUserAuthentication = useCallback(async () => {
 		try {
 			const currentUser = await getCurrentUser();
 			console.log("currentUser", currentUser);
@@ -49,7 +46,7 @@ function App() {
 			setUsername(null);
 			return false;
 		}
-	}
+	}, []);
 
 	useEffect(() => {
 		const fetchTodos = async () => {
@@ -59,7 +56,7 @@ function App() {
 			}
 		};
 		fetchTodos();
-	}, []);
+	}, [checkUserAuthentication, listTodos]);
 
 	function createTodo() {
 		client.models.Todo.create({
@@ -72,51 +69,81 @@ function App() {
 		setUsername(null);
 	};
 
+	const handleKeyDown = (event: React.KeyboardEvent, callback: () => void) => {
+		if (event.key === "Enter" || event.key === " ") {
+			callback();
+		}
+	};
+
 	return (
-		<main>
-			{username ? (
-				<div>
-					<h1>
-						<FormattedMessage id="welcome" values={{ username }} />
-					</h1>
-					<h1>
-						<FormattedMessage id="myTodos" />
-					</h1>
-					<button onClick={createTodo}>+ new</button>
-					<ul>
-						{todos.map((todo) => (
-							<li key={todo.id} onClick={() => deleteTodo(todo.id)}>
-								{todo.content}
-							</li>
-						))}
-					</ul>
+		<main className="govuk-width-container">
+			<div className="govuk-main-wrapper">
+				{username ? (
 					<div>
-						<FormattedMessage id="appHosted" />
-						<br />
-						<button onClick={handleSignOut}>
-							<FormattedMessage id="signOut" />
+						<h1 className="govuk-heading-xl">Welcome, {username}</h1>
+						<h2 className="govuk-heading-l">My todos</h2>
+						<button
+							type="button"
+							className="govuk-button"
+							onClick={createTodo}
+							onKeyDown={(e) => handleKeyDown(e, createTodo)}
+						>
+							+ New
+						</button>
+						<ul className="govuk-list app-todo-list">
+							{todos.map((todo) => (
+								<li key={todo.id} className="app-todo-list__item">
+									<button
+										type="button"
+										className="govuk-button govuk-button--secondary"
+										onClick={() => deleteTodo(todo.id)}
+										onKeyDown={(e) =>
+											handleKeyDown(e, () => deleteTodo(todo.id))
+										}
+									>
+										{todo.content}
+									</button>
+								</li>
+							))}
+						</ul>
+						<div>
+							<p className="govuk-body">
+								App successfully hosted. Try creating a new todo.
+							</p>
+							<button
+								type="button"
+								className="govuk-button govuk-button--warning"
+								onClick={handleSignOut}
+								onKeyDown={(e) => handleKeyDown(e, handleSignOut)}
+							>
+								Sign out
+							</button>
+						</div>
+					</div>
+				) : (
+					<div className="app-sign-in">
+						<button
+							type="button"
+							className="govuk-button"
+							data-module="govuk-button"
+							onClick={() =>
+								signInWithRedirect({
+									provider: { custom: "MicrosoftEntraID" },
+								})
+							}
+							onKeyDown={(e) =>
+								handleKeyDown(e, () =>
+									signInWithRedirect({
+										provider: { custom: "MicrosoftEntraID" },
+									}),
+								)
+							}
+						>
+							Sign in
 						</button>
 					</div>
-				</div>
-			) : (
-				<button
-					onClick={() =>
-						signInWithRedirect({
-							provider: { custom: "MicrosoftEntraID" },
-						})
-					}
-				>
-					<FormattedMessage id="signInWithMicrosoft" />
-				</button>
-			)}
+				)}
+			</div>
 		</main>
-	);
-}
-
-export default function IntlApp() {
-	return (
-		<IntlProvider messages={messages["en"]} locale="en" defaultLocale="en">
-			<App />
-		</IntlProvider>
 	);
 }

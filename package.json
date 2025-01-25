@@ -1,32 +1,35 @@
 {
-  "name": "aws-amplify-gen2",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@aws-amplify/ui-react": "^6.5.5",
-    "aws-amplify": "^6.6.6",
-    "next": "14.2.10",
-    "react": "^18.3.1",
-    "react-dom": "^18",
-    "react-intl": "^7.1.1"
-  },
-  "devDependencies": {
-    "@aws-amplify/backend": "^1.5.1",
-    "@aws-amplify/backend-cli": "^1.3.0",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "aws-cdk": "^2",
-    "aws-cdk-lib": "^2",
-    "constructs": "^10.3.0",
-    "esbuild": "^0.23.1",
-    "tsx": "^4.19.0",
-    "typescript": "^5.6.2"
-  }
+	"name": "aws-amplify-gen2",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "npm run copy-assets && next dev",
+		"build": "npm run copy-assets && next build",
+		"start": "next start",
+		"lint": "next lint",
+		"copy-assets": "mkdir -p public/node_modules/govuk-frontend/dist/govuk && cp -r node_modules/govuk-frontend/dist/govuk/assets node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.js public/node_modules/govuk-frontend/dist/govuk/"
+	},
+	"dependencies": {
+		"@aws-amplify/ui-react": "^6.5.5",
+		"aws-amplify": "^6.6.6",
+		"govuk-frontend": "^5.8.0",
+		"next": "14.2.10",
+		"react": "^18.3.1",
+		"react-dom": "^18",
+		"react-intl": "^7.1.1",
+		"sass": "^1.83.4"
+	},
+	"devDependencies": {
+		"@aws-amplify/backend": "^1.5.1",
+		"@aws-amplify/backend-cli": "^1.3.0",
+		"@types/node": "^20",
+		"@types/react": "^18",
+		"@types/react-dom": "^18",
+		"aws-cdk": "^2",
+		"aws-cdk-lib": "^2",
+		"constructs": "^10.3.0",
+		"esbuild": "^0.23.1",
+		"tsx": "^4.19.0",
+		"typescript": "^5.6.2"
+	}
 }
