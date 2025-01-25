@@ -1,4 +1,12 @@
-$govuk-assets-path: "/node_modules/govuk-frontend/dist/govuk/assets/";
-$govuk-font-family: "GDS Transport", arial, sans-serif;
+// --------------------------------------------------------------------------------
+// 1. GOV.UK Frontend configuration
+// --------------------------------------------------------------------------------
+
+// Use Atkinson Hyperlegible instead of GDS Transport
+$govuk-font-family: inherit;
+
+// --------------------------------------------------------------------------------
+// 2. Import GOV.UK Frontend
+// --------------------------------------------------------------------------------
 
 @import "node_modules/govuk-frontend/dist/govuk/all"; 
