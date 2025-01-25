@@ -36,6 +36,7 @@ function App() {
 	async function checkUserAuthentication() {
 		try {
 			const currentUser = await getCurrentUser();
+			console.log("currentUser", currentUser);
 			if (currentUser) {
 				const attributes = await fetchUserAttributes();
 				const displayName =

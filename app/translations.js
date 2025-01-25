@@ -5,7 +5,7 @@ export const messages = {
 		myTodos: "My todos",
 		newTodo: "+ new",
 		signOut: "Sign Out",
-		signInWithAuth0: "Sign in with Microsoft",
+		signInWithMicrosoft: "Sign in with Microsoft",
 		appHosted: "App successfully hosted. Try creating a new todo.",
 	},
 	// Add other languages as needed
@@ -14,7 +14,7 @@ export const messages = {
 		myTodos: "Mis tareas",
 		newTodo: "+ nueva",
 		signOut: "Cerrar sesión",
-		signInWithAuth0: "Iniciar sesión con Auth0",
+		signInWithMicrosoft: "Iniciar sesión con Auth0",
 		appHosted: "Aplicación alojada con éxito. Intenta crear una nueva tarea.",
 	},
 };
