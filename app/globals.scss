@@ -1,12 +1,9 @@
-// --------------------------------------------------------------------------------
-// 1. GOV.UK Frontend configuration
-// --------------------------------------------------------------------------------
-
 // Use Atkinson Hyperlegible instead of GDS Transport
+// Because we are not an official GOV.UK service, we can't use GDS Transport
 $govuk-font-family: inherit;
 
-// --------------------------------------------------------------------------------
-// 2. Import GOV.UK Frontend
-// --------------------------------------------------------------------------------
-
+// Import GOV.UK Frontend
 @import "node_modules/govuk-frontend/dist/govuk/all"; 
+
+// Import custom styles
+@import "./custom.scss"; 

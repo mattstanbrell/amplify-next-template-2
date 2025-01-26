@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "npm run copy-assets && next dev",
+		"dev": "npm run copy-assets && next dev --turbopack",
 		"build": "npm run copy-assets && next build",
 		"start": "next start",
 		"lint": "next lint",

@@ -9,14 +9,8 @@ export const { runWithAmplifyServerContext } = createServerRunner({
 });
 
 export async function AuthGetCurrentUserServer() {
-	try {
-		const currentUser = await runWithAmplifyServerContext({
-			nextServerContext: { cookies },
-			operation: (contextSpec) => getCurrentUser(contextSpec),
-		});
-		return currentUser;
-	} catch (error) {
-		console.error(error);
-		return null;
-	}
+	return await runWithAmplifyServerContext({
+		nextServerContext: { cookies },
+		operation: (contextSpec) => getCurrentUser(contextSpec),
+	});
 }
