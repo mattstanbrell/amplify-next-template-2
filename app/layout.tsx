@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Atkinson_Hyperlegible } from "next/font/google";
 import { GovUKFrontend } from "./components/govuk-frontend";
 import "./globals.scss";
+import ConfigureAmplifyClientSide from "./components/ConfigureAmplify";
 
 const atkinson = Atkinson_Hyperlegible({
 	weight: ["400", "700"],
@@ -33,7 +34,40 @@ export default function RootLayout({
 				<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 			</head>
 			<body className="govuk-template__body">
-				{children}
+				<ConfigureAmplifyClientSide />
+				<a
+					href="#main-content"
+					className="govuk-skip-link"
+					data-module="govuk-skip-link"
+				>
+					Skip to main content
+				</a>
+				<header className="govuk-header" data-module="govuk-header">
+					<div className="govuk-header__container govuk-width-container">
+						<div className="govuk-header__content">
+							<a
+								href="/"
+								className="govuk-header__link govuk-header__service-name"
+							>
+								Hounslow Critical Service
+							</a>
+						</div>
+					</div>
+				</header>
+				<div className="govuk-width-container">
+					<main className="govuk-main-wrapper" id="main-content">
+						{children}
+					</main>
+				</div>
+				<footer className="govuk-footer">
+					<div className="govuk-width-container">
+						<div className="govuk-footer__meta">
+							<div className="govuk-footer__meta-item">
+								© CRITICAL Channel 2025
+							</div>
+						</div>
+					</div>
+				</footer>
 				<GovUKFrontend />
 			</body>
 		</html>
