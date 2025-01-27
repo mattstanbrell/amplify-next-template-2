@@ -1,6 +1,8 @@
 // Use Atkinson Hyperlegible instead of GDS Transport
 // Because we are not an official GOV.UK service, we can't use GDS Transport
-$govuk-font-family: inherit;
+$govuk-font-family: "Atkinson Hyperlegible", arial, sans-serif;
+$govuk-font-family-tabular: "Atkinson Hyperlegible", arial, sans-serif;
+$govuk-include-default-font-face: false;
 
 // Import GOV.UK Frontend
 // This imports everything, we should only import what we need
@@ -9,3 +11,10 @@ $govuk-font-family: inherit;
 
 // Import custom styles
 @use "./custom.scss"; 
+
+// Override any remaining GOV.UK font families
+.govuk-template {
+  * {
+    font-family: "Atkinson Hyperlegible", arial, sans-serif;
+  }
+}

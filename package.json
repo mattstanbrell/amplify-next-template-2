@@ -11,7 +11,6 @@
 	},
 	"dependencies": {
 		"@aws-amplify/adapter-nextjs": "^1.4.2",
-		"@parcel/watcher": "^2.5.1",
 		"aws-amplify": "^6.6.6",
 		"govuk-frontend": "^5.8.0",
 		"next": "^15.0.0",

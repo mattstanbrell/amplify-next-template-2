@@ -6,6 +6,7 @@ import ConfigureAmplifyClientSide from "./components/ConfigureAmplify";
 
 const atkinson = Atkinson_Hyperlegible({
 	weight: ["400", "700"],
+	style: ["normal", "italic"],
 	subsets: ["latin"],
 	display: "swap",
 });
