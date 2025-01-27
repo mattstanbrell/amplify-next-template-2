@@ -3,7 +3,9 @@
 $govuk-font-family: inherit;
 
 // Import GOV.UK Frontend
-@import "node_modules/govuk-frontend/dist/govuk/all"; 
+// This imports everything, we should only import what we need
+// https://frontend.design-system.service.gov.uk/import-css/#import-specific-parts-using-sass
+@use "node_modules/govuk-frontend/dist/govuk"; 
 
 // Import custom styles
-@import "./custom.scss"; 
+@use "./custom.scss"; 
