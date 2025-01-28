@@ -1,20 +1,18 @@
-// Use Atkinson Hyperlegible instead of GDS Transport
-// Because we are not an official GOV.UK service, we can't use GDS Transport
-$govuk-font-family: "Atkinson Hyperlegible", arial, sans-serif;
-$govuk-font-family-tabular: "Atkinson Hyperlegible", arial, sans-serif;
-$govuk-include-default-font-face: false;
+$hounslow-primary: #642f6c;
 
-// Import GOV.UK Frontend
-// This imports everything, we should only import what we need
-// https://frontend.design-system.service.gov.uk/import-css/#import-specific-parts-using-sass
-@use "node_modules/govuk-frontend/dist/govuk"; 
 
-// Import custom styles
-@use "./custom.scss"; 
+// Import GOV.UK Frontend with custom configuration
+@use "node_modules/govuk-frontend/dist/govuk" with (
+  $govuk-brand-colour: $hounslow-primary,
+  // Use Atkinson Hyperlegible instead of GDS Transport
+  // Because we are not an official GOV.UK service, we can't use GDS Transport
+  $govuk-font-family: var(--font-atkinson),
+  // Disable the default GDS Transport font-face
+  $govuk-include-default-font-face: false
+);
 
-// Override any remaining GOV.UK font families
-.govuk-template {
-  * {
-    font-family: "Atkinson Hyperlegible", arial, sans-serif;
-  }
+
+// Define the public variables that can be used by other modules
+:root {
+  --hounslow-primary: #{$hounslow-primary};
 }

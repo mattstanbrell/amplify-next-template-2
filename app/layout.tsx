@@ -9,6 +9,7 @@ const atkinson = Atkinson_Hyperlegible({
 	style: ["normal", "italic"],
 	subsets: ["latin"],
 	display: "swap",
+	variable: "--font-atkinson",
 });
 
 export const metadata: Metadata = {
