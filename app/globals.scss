@@ -8,7 +8,8 @@ $hounslow-primary: #642f6c;
   // Because we are not an official GOV.UK service, we can't use GDS Transport
   $govuk-font-family: var(--font-atkinson),
   // Disable the default GDS Transport font-face
-  $govuk-include-default-font-face: false
+  $govuk-include-default-font-face: false,
+  $govuk-assets-path: "/govuk-assets/"
 );
 
 

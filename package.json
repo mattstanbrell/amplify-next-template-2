@@ -3,11 +3,10 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "npm run copy-assets && next dev --turbopack",
-		"build": "npm run copy-assets && next build",
+		"dev": "next dev --turbopack",
+		"build": "next build",
 		"start": "next start",
-		"lint": "next lint",
-		"copy-assets": "mkdir -p public/node_modules/govuk-frontend/dist/govuk && cp -r node_modules/govuk-frontend/dist/govuk/assets node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.js public/node_modules/govuk-frontend/dist/govuk/"
+		"lint": "next lint"
 	},
 	"dependencies": {
 		"@aws-amplify/adapter-nextjs": "^1.4.2",
