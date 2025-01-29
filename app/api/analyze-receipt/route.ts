@@ -3,29 +3,19 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import convert from "heic-convert";
 import Anthropic from "@anthropic-ai/sdk";
 import OpenAI from "openai";
+import { secret } from "@aws-amplify/backend";
 
-if (!process.env.GEMINI_API_KEY) {
-	throw new Error("GEMINI_API_KEY environment variable is not set");
-}
+const GEMINI_API_KEY = secret("GEMINI_API_KEY").toString();
+const HYPERBOLIC_API_KEY = secret("HYPERBOLIC_API_KEY").toString();
+const ANTHROPIC_API_KEY = secret("ANTHROPIC_API_KEY").toString();
+const OPENAI_API_KEY = secret("OPENAI_API_KEY").toString();
 
-if (!process.env.HYPERBOLIC_API_KEY) {
-	throw new Error("HYPERBOLIC_API_KEY environment variable is not set");
-}
-
-if (!process.env.ANTHROPIC_API_KEY) {
-	throw new Error("ANTHROPIC_API_KEY environment variable is not set");
-}
-
-if (!process.env.OPENAI_API_KEY) {
-	throw new Error("OPENAI_API_KEY environment variable is not set");
-}
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const anthropic = new Anthropic({
-	apiKey: process.env.ANTHROPIC_API_KEY,
+	apiKey: ANTHROPIC_API_KEY,
 });
 const openai = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY,
+	apiKey: OPENAI_API_KEY,
 });
 
 // Supported MIME types by Gemini (removing HEIC/HEIF as they're not actually supported)
@@ -148,7 +138,7 @@ async function analyzeWithQwen72B(base64Data: string): Promise<ModelResult> {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
-			Authorization: `Bearer ${process.env.HYPERBOLIC_API_KEY}`,
+			Authorization: `Bearer ${HYPERBOLIC_API_KEY}`,
 		},
 		body: JSON.stringify({
 			model: "Qwen/Qwen2-VL-72B-Instruct",
@@ -212,7 +202,7 @@ async function analyzeWithQwen7B(base64Data: string): Promise<ModelResult> {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
-			Authorization: `Bearer ${process.env.HYPERBOLIC_API_KEY}`,
+			Authorization: `Bearer ${HYPERBOLIC_API_KEY}`,
 		},
 		body: JSON.stringify({
 			model: "Qwen/Qwen2-VL-7B-Instruct",
