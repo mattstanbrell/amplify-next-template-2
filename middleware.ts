@@ -27,13 +27,16 @@ async function getAccessToken(request: NextRequest): Promise<boolean> {
 
 /**
  * Next.js Middleware for protecting routes
- * - Allows public access to the home page
+ * - Allows public access to the home page and receipt page
  * - Requires authentication for all other routes
  * - Redirects to home page if authentication fails
  */
 export async function middleware(request: NextRequest) {
-	// Allow public access to home page
-	if (request.nextUrl.pathname === "/") {
+	// Allow public access to home page and receipt page
+	if (
+		request.nextUrl.pathname === "/" ||
+		request.nextUrl.pathname === "/receipt"
+	) {
 		return NextResponse.next();
 	}
 
