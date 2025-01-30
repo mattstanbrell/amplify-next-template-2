@@ -29,5 +29,5 @@
 		".next/types/**/*.ts",
 		"app/translation.js"
 	],
-	"exclude": ["node_modules", "amplify/**/*", ".amplify/**/*"]
+	"exclude": ["node_modules", "amplify/**/*"]
 }
