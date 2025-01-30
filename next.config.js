@@ -4,6 +4,7 @@ const path = require("node:path");
 const nextConfig = {
 	sassOptions: {
 		includePaths: [path.join(__dirname, "app")],
+		quietDeps: true,
 	},
 	async rewrites() {
 		return [

@@ -84,14 +84,26 @@ export default function ReceiptPage() {
 		formData.append("receipt", file);
 
 		try {
-			const response = await fetch("/api/analyze-receipt", {
+			const response = await fetch("/api/analyse-receipt", {
 				method: "POST",
 				body: formData,
 			});
 
 			if (!response.ok) {
 				const data = await response.json();
-				throw new Error(data.error || "Failed to analyze receipt");
+				console.error("API Error:", data);
+				throw new Error(
+					data.message || data.error || "Failed to analyze receipt",
+				);
+			}
+
+			const contentType = response.headers.get("Content-Type");
+			if (contentType?.includes("application/json")) {
+				// If we got a JSON response, it's probably an error
+				const data = await response.json();
+				throw new Error(
+					data.message || data.error || "Failed to analyze receipt",
+				);
 			}
 
 			// Handle streaming response
@@ -109,38 +121,68 @@ export default function ReceiptPage() {
 				const chunk = decoder.decode(value);
 				const lines = chunk.split("\n").filter(Boolean);
 
+				let currentEvent = "";
+				let currentData = "";
+
 				for (const line of lines) {
-					const { model, result } = JSON.parse(line);
-					setResults((prev) => ({
-						...prev,
-						[model]: result,
-					}));
+					if (line.startsWith("event: ")) {
+						currentEvent = line.slice(7);
+					} else if (line.startsWith("data: ")) {
+						currentData = line.slice(6);
+						try {
+							const result = JSON.parse(currentData);
+							setResults((prev) => ({
+								...prev,
+								[currentEvent]: result,
+							}));
+						} catch (parseError) {
+							console.error("Failed to parse chunk:", {
+								event: currentEvent,
+								data: currentData,
+								error: parseError,
+							});
+						}
+					}
 				}
 			}
 		} catch (error) {
 			console.error("Error analyzing receipt:", error);
-			setError("The selected file could not be uploaded – try again");
+			setError(
+				error instanceof Error
+					? error.message
+					: "The selected file could not be uploaded – try again",
+			);
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
-	const modelDisplayNames: { [key: string]: string } = {
-		gemini: "Gemini 2.0 Flash (Google)",
-		qwen72b: "Qwen2-VL 72B (Hyperbolic)",
-		qwen7b: "Qwen2-VL 7B (Hyperbolic)",
-		"claude-haiku": "Claude 3 Haiku (Anthropic)",
-		gpt4: "GPT-4o-mini (OpenAI)",
+	const modelDisplayNames: {
+		[key: string]: { name: string; provider: string };
+	} = {
+		gemini: { name: "Gemini 2.0 Flash", provider: "Google" },
+		qwen72b: { name: "Qwen2-VL 72B", provider: "Hyperbolic" },
+		qwen7b: { name: "Qwen2-VL 7B", provider: "Hyperbolic" },
+		"claude-haiku": { name: "Claude 3 Haiku", provider: "Anthropic" },
+		gpt4: { name: "GPT-4o-mini", provider: "OpenAI" },
 	};
 
 	const renderModelResult = (
 		result: ModelResult | undefined,
-		modelName: string,
+		modelInfo: { name: string; provider: string },
 	) => {
 		if (!result) {
 			return (
 				<div className="govuk-panel govuk-panel--processing">
-					<h2 className="govuk-panel__title">{modelName}</h2>
+					<h2
+						className="govuk-panel__title"
+						style={{ fontSize: "24px", marginBottom: "4px" }}
+					>
+						{modelInfo.name}
+					</h2>
+					<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+						Provider: {modelInfo.provider}
+					</div>
 					<div className="govuk-panel__body">
 						<progress className="govuk-progress">
 							<span className="govuk-visually-hidden">Processing...</span>
@@ -154,7 +196,15 @@ export default function ReceiptPage() {
 		if ("error" in result) {
 			return (
 				<div className="govuk-error-summary" role="alert">
-					<h2 className="govuk-error-summary__title">{modelName} Error</h2>
+					<h2
+						className="govuk-error-summary__title"
+						style={{ fontSize: "24px", marginBottom: "4px" }}
+					>
+						{modelInfo.name}
+					</h2>
+					<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+						Provider: {modelInfo.provider}
+					</div>
 					<div className="govuk-error-summary__body">{result.error}</div>
 				</div>
 			);
@@ -162,10 +212,19 @@ export default function ReceiptPage() {
 
 		return (
 			<div className="govuk-panel govuk-panel--confirmation">
-				<h2 className="govuk-panel__title">{modelName}</h2>
+				<h2
+					className="govuk-panel__title"
+					style={{ fontSize: "24px", marginBottom: "4px" }}
+				>
+					{modelInfo.name}
+				</h2>
+				<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+					Provider: {modelInfo.provider}
+				</div>
 				<div className="govuk-panel__body">
-					{result.total}
-					<br />
+					<div style={{ marginTop: "12px", marginBottom: "12px" }}>
+						Total: {result.total}
+					</div>
 					<div style={{ color: "white", fontSize: "16px", marginTop: "8px" }}>
 						<div>Time: {result.timeTaken}ms</div>
 						<div>
@@ -236,19 +295,21 @@ export default function ReceiptPage() {
 				)}
 
 				{(isLoading || Object.keys(results).length > 0) && (
-					<div className="govuk-grid-row">
-						<div className="govuk-grid-column-one-half">
-							{renderModelResult(results.gemini, modelDisplayNames.gemini)}
-							{renderModelResult(results.qwen72b, modelDisplayNames.qwen72b)}
-							{renderModelResult(results.qwen7b, modelDisplayNames.qwen7b)}
-						</div>
-						<div className="govuk-grid-column-one-half">
-							{renderModelResult(
-								results["claude-haiku"],
-								modelDisplayNames["claude-haiku"],
-							)}
-							{renderModelResult(results.gpt4, modelDisplayNames.gpt4)}
-						</div>
+					<div
+						style={{
+							display: "grid",
+							gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+							gap: "20px",
+						}}
+					>
+						{renderModelResult(results.gemini, modelDisplayNames.gemini)}
+						{renderModelResult(
+							results["claude-haiku"],
+							modelDisplayNames["claude-haiku"],
+						)}
+						{renderModelResult(results.qwen7b, modelDisplayNames.qwen7b)}
+						{renderModelResult(results.qwen72b, modelDisplayNames.qwen72b)}
+						{renderModelResult(results.gpt4, modelDisplayNames.gpt4)}
 					</div>
 				)}
 			</main>

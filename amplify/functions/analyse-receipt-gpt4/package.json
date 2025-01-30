@@ -1,0 +1,9 @@
+{
+	"name": "analyse-receipt-gpt4",
+	"version": "1.0.0",
+	"description": "Analyses receipt images using GPT-4 Vision model",
+	"main": "handler.js",
+	"dependencies": {
+		"openai": "^4.28.0"
+	}
+}
