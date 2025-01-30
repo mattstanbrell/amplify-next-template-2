@@ -18,7 +18,7 @@ export const handler: Handler = async (event: RequestEvent) => {
 		const startTime = Date.now();
 
 		const anthropic = new Anthropic({
-			apiKey: env.ANTHROPIC_API_KEY,
+			apiKey: process.env.ANTHROPIC_API_KEY,
 		});
 
 		const response = await anthropic.messages.create({
