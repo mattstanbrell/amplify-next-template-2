@@ -13,7 +13,7 @@ interface RequestEvent {
 
 export const handler: Handler = async (event: RequestEvent, context) => {
 	try {
-		const ANTHROPIC_API_KEY = env.ANTHROPIC_API_KEY;
+		const ANTHROPIC_API_KEY = env.MY_ANTHROPIC_API_KEY;
 		const base64Data = event.body;
 		console.log("Sending to Claude...");
 		const startTime = Date.now();
