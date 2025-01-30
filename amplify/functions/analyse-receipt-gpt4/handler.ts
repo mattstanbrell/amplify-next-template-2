@@ -12,12 +12,13 @@ interface RequestEvent {
 
 export const handler = async (event: RequestEvent) => {
 	try {
+		const OPENAI_API_KEY = env.OPENAI_API_KEY;
 		const base64Data = event.body;
 		console.log("Sending to GPT-4...");
 		const startTime = Date.now();
 
 		const openai = new OpenAI({
-			apiKey: env.OPENAI_API_KEY,
+			apiKey: OPENAI_API_KEY,
 		});
 
 		const response = await openai.chat.completions.create({
