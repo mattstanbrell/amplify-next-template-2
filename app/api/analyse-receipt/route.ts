@@ -10,6 +10,7 @@ import { handler as qwen72bHandler } from "../../../amplify/functions/analyse-re
 import { handler as qwen7bHandler } from "../../../amplify/functions/analyse-receipt-qwen7b/handler";
 import { handler as claudeHandler } from "../../../amplify/functions/analyse-receipt-claude/handler";
 import { handler as gpt4Handler } from "../../../amplify/functions/analyse-receipt-gpt4/handler";
+import type { Context } from "aws-lambda";
 
 function formatBytes(bytes: number): string {
 	const sizes = ["Bytes", "KB", "MB", "GB"];
@@ -116,12 +117,16 @@ export async function POST(request: NextRequest) {
 		const modelPromises = modelEndpoints.map(async ({ name, handler }) => {
 			try {
 				console.log(`[RECEIPT ANALYSIS] Sending to ${name}...`);
-				const response = (await handler({
-					body: base64Data,
-					headers: {
-						"content-type": mimeType,
+				const response = (await handler(
+					{
+						body: base64Data,
+						headers: {
+							"content-type": mimeType,
+						},
 					},
-				})) as { statusCode: number; body: string };
+					{} as Context,
+					() => {},
+				)) as { statusCode: number; body: string };
 
 				const result = JSON.parse(response.body);
 				console.log(`[RECEIPT ANALYSIS] ${name} response:`, result);
