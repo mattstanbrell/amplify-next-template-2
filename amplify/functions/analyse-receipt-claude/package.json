@@ -1,9 +1,0 @@
-{
-	"name": "analyse-receipt-claude",
-	"version": "1.0.0",
-	"description": "Analyses receipt images using Claude model",
-	"main": "handler.js",
-	"dependencies": {
-		"@anthropic-ai/sdk": "^0.18.0"
-	}
-}

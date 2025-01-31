@@ -19,4 +19,3 @@ frontend:
       - .next/cache/**/*
       - .npm/**/*
       - node_modules/**/*
-      - .amplify/**/*
